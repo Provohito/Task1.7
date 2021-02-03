@@ -1,25 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
     [Header("Назначение цвета для спавна")]
+
     [SerializeField]
     Color[] colorSpawn;
+
     [Header("Спрайты и точки для спавна")]
+
     [SerializeField]
     Sprite[] objectsToSpawn;
-
-    
-
     [SerializeField]
     GameObject[] pointsToSpawn;
 
-    Dictionary<string, int> colors = new Dictionary<string, int>(4);
 
-    int mistakes = 0;
+    Dictionary<string, int> colors = new Dictionary<string, int>(4);
+    public int mistakes = 0;// Счётчик ошибок
+    public int roundsCount = 0;
 
     
 
@@ -72,26 +72,18 @@ public class GameController : MonoBehaviour
         }
         if (colors["yellow"] == colors["red"] | colors["yellow"] == colors["black"] | colors["yellow"] == colors["white"])
         {
-            Debug.Log("1");
             SpawnSprites();
         }
         
     }
-
     void Update()
     {
-        Debug.Log(colors["yellow"]);
-        Debug.Log(colors["red"]);
-        Debug.Log(colors["black"]);
-        Debug.Log(colors["white"]);
-        
-        if (colors["yellow"] == 0 & colors["red"] == 0 & colors["black"] == 0 &  colors["white"] == 0)
+        if (colors["yellow"] == 0 & colors["red"] == 0 & colors["black"] == 0 & colors["white"] == 0)
         {
-            Debug.Log("dsadasjhfdhslkj");
+            roundsCount += 1;
         }
-        
-        
     }
+
     // Уничтожение объектов
     public void DestroyObjects(string value)
     {
@@ -108,8 +100,9 @@ public class GameController : MonoBehaviour
 
                     }
                     colors["yellow"] = 0;
+                    break;
                 }
-                break;
+                goto Mistakes;
             case "red":
                 if (colors["red"] > colors["yellow"] & colors["red"] > colors["black"] & colors["red"] > colors["white"])
                 {
@@ -119,8 +112,10 @@ public class GameController : MonoBehaviour
                         Destroy(allObjectDestroy[i]);
                     }
                     colors["red"] = 0;
+                    break;
                 }
-                break;
+                goto Mistakes;
+                
             case "black":
                 if (colors["black"] > colors["red"] & colors["black"] > colors["yellow"] & colors["black"] > colors["white"])
                 {
@@ -130,8 +125,10 @@ public class GameController : MonoBehaviour
                         Destroy(allObjectDestroy[i]);
                     }
                     colors["black"] = 0;
+                    break;
                 }
-                break;
+                goto Mistakes;
+                
             case "white":
                 if (colors["white"] > colors["red"] & colors["white"] > colors["black"] & colors["white"] > colors["yellow"])
                 {
@@ -141,17 +138,17 @@ public class GameController : MonoBehaviour
                         Destroy(allObjectDestroy[i]);
                     }
                     colors["white"] = 0;
+                    break;
                 }
+                goto Mistakes;
+            Mistakes:
+                mistakes += 1;
                 break;
             default:
-                mistakes += 1;
                 break;
         }
 
     }
-    // Перезапуск игры
-    void ReloadGame()
-    {
-
-    }
+   
+    
 }
